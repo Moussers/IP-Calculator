@@ -29,6 +29,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		freopen("CONOUT$", "w", stdout);
 		std::cout << "Init" << std::endl;
 		SetFocus(GetDlgItem(hwnd, IDC_IP_ADDRESS));
+		SendMessage(GetDlgItem(hwnd, IDC_SPIN_PREFIX), UDM_SETRANGE, 0, MAKEWORD(30, 0));
+		//MAKEWORD - —оздает значение WORD, объедин€€ значени€ из страшего и младшего бита.
 	}
 		break;
 	case WM_COMMAND:
@@ -58,6 +60,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (HIWORD(wParam) == EN_CHANGE) 
 			{
 				SendMessage(hIPmask, IPM_GETADDRESS, 0, (LPARAM)&dwIPmask);
+				dwIPmask &= 0xFFFFFFFC;
+				//0xFFFFFFFC - 255 в шестнадцатиричном представлении в 32 битной системе счислени€
 				for (dwIPprefix = 0; dwIPmask; dwIPprefix++)dwIPmask <<= 1;
 				//dwIPmask; - равен условию: dwIPmask: dwIPmask == True
 				CHAR szIPprefix[3] = {};
@@ -65,6 +69,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				std::cout << szIPprefix << std::endl;
 				SendMessage(hIPprefix, WM_SETTEXT, 0, (LPARAM)szIPprefix);
 			}
+			//if (HIWORD(wParam) == EN_KILLFOCUS)SendMessage(hIPmask, IPM_SETADDRESS, 0, dwIPaddress);
 		}
 	case IDOK:
 		break;
