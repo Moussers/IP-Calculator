@@ -15,6 +15,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 LPSTR FormatAddress(CHAR szBuffer[], CONST CHAR szMessage[], DWORD dwIPaddress);
 LPSTR FormatCount(CHAR szBuffer[], CONST CHAR szMessage[], DWORD dwCount);
 VOID PrintInfo(HWND hwnd);
+VOID DecimalToBinary(DWORD addr, CHAR* dst);
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -80,7 +81,6 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case IDC_EDIT_PREFIX:
 	{
-
 		DWORD dwIPaddress = 0;
 		DWORD dwIPmask = 0;
 		DWORD dwIPprefix = 0;
@@ -151,6 +151,34 @@ LPSTR FormatAddress(CHAR szBuffer[], CONST CHAR szMessage[], DWORD dwIPaddress)
 	);
 	return szBuffer;
 }
+VOID DecimalToBinary(DWORD addr, CHAR* dst) 
+{
+	dst[8] = '.';
+	dst[17] = '.';
+	dst[26] = '.';
+	dst[35] = '\0';
+	DWORD k = 1 << 31;
+	//Смещение в числе 1 на 31 бит влево
+	for (int i = 0; i < 4; ++i) 
+	{
+		for (int j = 0; j < 8; ++j) 
+		{
+			if ((addr & k) != 0) 
+			//Проверяем присутствует ли в побитовой маске addr единица, если да ставим 1
+			{
+				dst[i * 9 + j] = '1';
+			}
+			else
+			//иначе ставим 0
+			{
+				dst[i * 9 + j] = '0';
+			}
+			k /= 2;
+			//k сдвигаем вправо делением на два
+			//или k>>1
+		}
+	}
+}
 LPSTR FormatCount(CHAR szBuffer[], CONST CHAR szMessage[], DWORD dwCount)
 {
 	sprintf(szBuffer, "%s%i", szMessage, dwCount);
@@ -164,7 +192,7 @@ VOID PrintInfo(HWND hwnd)
 	DWORD dwIPaddress = 0;
 	DWORD dwIPmask = 0;
 	SendMessage(hIPaddress, IPM_GETADDRESS, 0, (LPARAM)&dwIPaddress);
-	SendMessage(hIPaddress, IPM_GETADDRESS, 0, (LPARAM)&dwIPmask);
+	SendMessage(hIPmask, IPM_GETADDRESS, 0, (LPARAM)&dwIPmask);
 	DWORD dwNetworkAddress = dwIPaddress & dwIPmask;
 	DWORD dwBroadcastAddress = dwIPaddress | ~dwIPmask;
 	CHAR szInfo[1024] = {};
@@ -172,14 +200,20 @@ VOID PrintInfo(HWND hwnd)
 	CHAR szBroadcastAddress[1024] = {};
 	CHAR szIPcount[1024] = {};
 	CHAR szHostCount[1024] = {};
+	CHAR charIPaddress[1024];
+	CHAR charMask[1024];
+	DecimalToBinary(dwIPaddress, charIPaddress);
+	DecimalToBinary(dwIPmask, charMask);
 	sprintf
 	(
 		szInfo,
-		"%s\n%s\n%s\n%s",
-		FormatAddress(szNetworkAddress,"Адрес сети:\t\t\t", dwIPaddress & dwIPmask),
-		FormatAddress(szBroadcastAddress, "Широковещательный адрес:\t", dwIPaddress | ~dwIPmask),
+		"%s\n%s\n%s\n%s\n%s%s\n%s%s",
+		FormatAddress(szNetworkAddress, "Адрес сети:\t\t\t", dwNetworkAddress),
+		FormatAddress(szBroadcastAddress, "Широковещательный адрес:\t", dwBroadcastAddress),
 		FormatCount(szIPcount, "Колличество IP-адресов:\t", dwBroadcastAddress - dwNetworkAddress + 1),
-		FormatCount(szIPcount, "Колличество узлов:\t", dwBroadcastAddress - dwNetworkAddress - 1)
+		FormatCount(szIPcount, "Колличество узлов:\t", dwBroadcastAddress - dwNetworkAddress - 1),
+		"IP-адрес в двоичной форме:", charIPaddress,
+		"Маска в двоичной форме:", charMask
 	);
 	SendMessage(hStaticInfo, WM_SETTEXT, 0, (LPARAM)szInfo);
 }
