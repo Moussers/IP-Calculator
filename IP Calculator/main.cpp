@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <iostream>
@@ -34,7 +34,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		std::cout << "Init" << std::endl;
 		SetFocus(GetDlgItem(hwnd, IDC_IP_ADDRESS));
 		SendMessage(GetDlgItem(hwnd, IDC_SPIN_PREFIX), UDM_SETRANGE, 0, MAKEWORD(30, 0));
-		//MAKEWORD - Ñîçäàåò çíà÷åíèå WORD, îáúåäèíÿÿ çíà÷åíèÿ èç ñòðàøåãî è ìëàäøåãî áèòà.
+		//MAKEWORD - Ð¡Ð¾Ð·Ð´Ð°ÐµÑ‚ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ WORD, Ð¾Ð±ÑŠÐµÐ´Ð¸Ð½ÑÑ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ Ð¸Ð· ÑÑ‚Ñ€Ð°ÑˆÐµÐ³Ð¾ Ð¸ Ð¼Ð»Ð°Ð´ÑˆÐµÐ³Ð¾ Ð±Ð¸Ñ‚Ð°.
 	}
 		break;
 	case WM_COMMAND:
@@ -68,9 +68,9 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				//SendMessage(hIPmask, IPM_GETADDRESS, 0, (LPARAM)&dwIPmask);
 				//dwIPmask &= 0xFFFFFFFC;
-				////0xFFFFFFFC - 255 â øåñòíàäöàòèðè÷íîì ïðåäñòàâëåíèè â 32 áèòíîé ñèñòåìå ñ÷èñëåíèÿ
+				////0xFFFFFFFC - 255 Ð² ÑˆÐµÑÑ‚Ð½Ð°Ð´Ñ†Ð°Ñ‚Ð¸Ñ€Ð¸Ñ‡Ð½Ð¾Ð¼ Ð¿Ñ€ÐµÐ´ÑÑ‚Ð°Ð²Ð»ÐµÐ½Ð¸Ð¸ Ð² 32 Ð±Ð¸Ñ‚Ð½Ð¾Ð¹ ÑÐ¸ÑÑ‚ÐµÐ¼Ðµ ÑÑ‡Ð¸ÑÐ»ÐµÐ½Ð¸Ñ
 				//for (dwIPprefix = 0; dwIPmask; dwIPprefix++)dwIPmask <<= 1;
-				////dwIPmask; - ðàâåí óñëîâèþ: dwIPmask: dwIPmask == True
+				////dwIPmask; - Ñ€Ð°Ð²ÐµÐ½ ÑƒÑÐ»Ð¾Ð²Ð¸ÑŽ: dwIPmask: dwIPmask == True
 				//CHAR szIPprefix[3] = {};
 				//sprintf(szIPprefix, "%i", dwIPprefix);
 				//std::cout << szIPprefix << std::endl;
@@ -112,7 +112,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_NOTIFY:
-	//Îáúÿâëåíèå î ñîîáùåíèè
+	//ÐžÐ±ÑŠÑÐ²Ð»ÐµÐ½Ð¸Ðµ Ð¾ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¸
 	{
 		NMHDR* p_nmhdr = (NMHDR*)lParam;
 		std::cout << p_nmhdr->idFrom<<"\t" << std::endl;
@@ -123,7 +123,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			DWORD dwIPprefix = 0;
 			SendMessage(hIPmask, IPM_GETADDRESS, 0, (LPARAM)&dwIPmask);
 			for (dwIPprefix = 0; dwIPmask; dwIPprefix++)dwIPmask <<= 1;
-			//dwIPmask; - ðàâåí óñëîâèþ: dwIPmask: dwIPmask == True
+			//dwIPmask; - Ñ€Ð°Ð²ÐµÐ½ ÑƒÑÐ»Ð¾Ð²Ð¸ÑŽ: dwIPmask: dwIPmask == True
 			CHAR szIPprefix[3] = {};
 			sprintf(szIPprefix, "%i", dwIPprefix);
 			std::cout << szIPprefix << std::endl;
@@ -176,10 +176,10 @@ VOID PrintInfo(HWND hwnd)
 	(
 		szInfo,
 		"%s\n%s\n%s\n%s",
-		FormatAddress(szNetworkAddress,"Àäðåñ ñåòè:\t\t\t", dwIPaddress & dwIPmask),
-		FormatAddress(szBroadcastAddress, "Øèðîêîâåùàòåëüíûé àäðåñ:\t", dwIPaddress | ~dwIPmask),
-		FormatCount(szIPcount, "Êîëëè÷åñòâî IP-àäðåñîâ:\t", dwBroadcastAddress - dwNetworkAddress + 1),
-		FormatCount(szIPcount, "Êîëëè÷åñòâî óçëîâ:\t", dwBroadcastAddress - dwNetworkAddress - 1)
+		FormatAddress(szNetworkAddress,"ÐÐ´Ñ€ÐµÑ ÑÐµÑ‚Ð¸:\t\t\t", dwIPaddress & dwIPmask),
+		FormatAddress(szBroadcastAddress, "Ð¨Ð¸Ñ€Ð¾ÐºÐ¾Ð²ÐµÑ‰Ð°Ñ‚ÐµÐ»ÑŒÐ½Ñ‹Ð¹ Ð°Ð´Ñ€ÐµÑ:\t", dwIPaddress | ~dwIPmask),
+		FormatCount(szIPcount, "ÐšÐ¾Ð»Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ IP-Ð°Ð´Ñ€ÐµÑÐ¾Ð²:\t", dwBroadcastAddress - dwNetworkAddress + 1),
+		FormatCount(szIPcount, "ÐšÐ¾Ð»Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑƒÐ·Ð»Ð¾Ð²:\t", dwBroadcastAddress - dwNetworkAddress - 1)
 	);
 	SendMessage(hStaticInfo, WM_SETTEXT, 0, (LPARAM)szInfo);
 }
