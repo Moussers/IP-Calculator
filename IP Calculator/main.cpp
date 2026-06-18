@@ -9,6 +9,8 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
 	DialogBoxParam(hInstance, MAKEINTRESOURCE(IDC_DIALOG_MAIN), NULL, (DLGPROC)DlgProc, NULL);
+	//DialogBoxParam - мы используем для открытия окна созданного через меню конструктор (Resource.rc \ Dialog)
+	//Создает модальное диалоговое окно на основе ресурса шаблона диалогового окна. 
 	return 0;
 }
 
